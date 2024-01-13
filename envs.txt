@@ -1,0 +1,42 @@
+库文件：
+openai
+tensorflow
+pypdf
+langchain
+langchain-community
+chromadb
+chardet
+tiktoken
+pip install -U langchain-openai
+#下面的一定在anaconda下，关闭梯子，配置清华源
+conda install -c conda-forge chromadb
+conda install -c conda-forge "langchain[docarray]"
+
+
+
+本机环境变量配置：(配置好之后要重新打开终端）
+https://zhuanlan.zhihu.com/p/627665725
+#openai.api_key = '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'
+
+服务器相关配置：
+下载和安装Xming：前往Xming的官方网站（https://sourceforge.net/projects/xming/）下载安装程序。
+下载完毕后，运行安装程序并按照提示进行安装。
+转到项目的“Edit Configurations”（运行配置）窗口，在“Environment”（环境）选项卡中，添加一个新的环境变量：DISPLAY，将其值设置为localhost:0.0。
+点击“Apply”（应用）然后点击“OK”（确定）以保存配置更改。
+
+#可能需要的配置：如果下载包的时候报错：
+    Building wheel for hnswlib (pyproject.toml) did not run successfully.
+    exit code: 1
+
+    [5 lines of output]
+    running bdist_wheel
+    running build
+    running build_ext
+    building 'hnswlib' extension
+    error: Microsoft Visual C++ 14.0 or greater is required. Get it with "Microsoft C++ Build Tools": Microsoft C++ Build Tools - Visual Studio
+    [end of output]
+    需要到https://visualstudio.microsoft.com/zh-hans/visual-cpp-build-tools/下载visual studio，在下载栏选择C++桌面开发工具，sdk选择自己电脑Windows系统的版本
+
+运行时要求：
+运行时保持xming开启
+以防报retrying，使用时需要保持科学上网
