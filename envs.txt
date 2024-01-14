@@ -1,3 +1,4 @@
+python：3.9.18
 库文件：
 openai
 tensorflow
