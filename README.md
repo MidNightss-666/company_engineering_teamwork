@@ -35,7 +35,7 @@
 ## 2. 环境变量配置
 参照如下教程在本机配置openai_api_key环境变量，之后重启终端。
 https://zhuanlan.zhihu.com/p/627665725
-注：openai.api_key = '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'
+注：openai.api_key在envs.txt
 ## 3. 服务器部署
 panel包的GUI界面需要依赖服务器启动，这里使用X服务器。
 下载和安装Xming：前往Xming的官方网站（https://sourceforge.net/projects/xming/）下载安装程序。
