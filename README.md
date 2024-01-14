@@ -42,7 +42,8 @@ panel包的GUI界面需要依赖服务器启动，这里使用X服务器。
 下载完毕后，运行安装程序并按照提示进行安装。
 转到项目的“Edit Configurations”（运行配置）窗口，在“Environment”（环境）选项卡中，添加一个新的环境变量：DISPLAY，将其值设置为localhost:0.0。
 点击“Apply”（应用）然后点击“OK”（确定）以保存配置更改。
-## 4.运行时注意
+## 4.运行
+直接运行text.py即可，simplechat还有地方需要修改，暂时跑不通
 1. 运行项目时需要和openai的服务器交互，所以需要保持网络连接，梯子打开，以免报retry和HTTPCONNECTEXPECTION
 2. 为了打开GUI界面，运行时需要保持Xming服务器开启。
 
