@@ -1,19 +1,9 @@
-#from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.text_splitter import CharacterTextSplitter, RecursiveCharacterTextSplitter
-# from langchain.vectorstores import DocArrayInMemorySearch
-# from langchain.document_loaders import TextLoader
-from langchain.chains import RetrievalQA, ConversationalRetrievalChain
-# from langchain.memory import ConversationBufferMemory
-# from langchain.chat_models import ChatOpenAI
-# from langchain.document_loaders import TextLoader
-# from langchain.document_loaders import PyPDFLoader
-
-# from langchain_openai import ChatOpenAI
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.chains import ConversationalRetrievalChain
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_openai import ChatOpenAI
 from langchain_community.vectorstores import DocArrayInMemorySearch
-# from langchain_community.document_loaders import TextLoader
 import panel as pn
 import param
 llm_name="gpt-3.5-turbo"

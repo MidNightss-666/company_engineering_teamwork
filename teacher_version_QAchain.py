@@ -1,11 +1,7 @@
-# from langchain.vectorstores import Chroma
-# from langchain.embeddings.openai import OpenAIEmbeddings
-# from langchain_community.chat_models import ChatOpenAI
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
-
 from langchain_openai import OpenAIEmbeddings
 from langchain_openai import ChatOpenAI
 from langchain_community.vectorstores import Chroma

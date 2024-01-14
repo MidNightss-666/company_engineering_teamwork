@@ -1,21 +1,19 @@
 import panel as pn
 import teacher_version_QAchain
 import param
-from langchain_community.vectorstores import Chroma
-from langchain_community.chat_models import ChatOpenAI
 import teacher_version_create_database
 
 
-class simple_chat(param.Parameterized):
+class simple_chat(param.Parameterized):#chat封装类
     chat_history = param.List([])#历史记录
     answer = param.String("")#答案
     db_query = param.String("")#问题集
     db_response = param.List([])#回应集
-    loaded_file="matplotlib"#载入的文件
+    loaded_file="matplotlib"#默认载入的文件
     #初始化函数
     def __init__(self, directory='docs/chroma/matplotlib',llmname="gpt-3.5-turbo",**params):
         super(simple_chat, self).__init__(**params)
-        self.panels = []#可视化页面
+        self.panels = []#可视化页面存储
         # 导入数据库
         self.vectordb = teacher_version_QAchain.import_database(directory=directory)
         # 创建LLM
@@ -27,7 +25,7 @@ class simple_chat(param.Parameterized):
 
     #函数：将文档加载到聊天机器人中，count为总启动次数
     def load_db(self, count):
-        if count == 0 or file_input.value is None:  # 初始化或未指定文件，报默认文件 :
+        if count == 0 or file_input.value is None:  # 初始化或未指定文件，报默认文件
             return pn.pane.Markdown(f"Loaded File: {self.loaded_file}")
         else:
             file_input.save("temp.pdf")  #下载上传文件
@@ -36,7 +34,6 @@ class simple_chat(param.Parameterized):
             #更新数据库和问答链
             self.vectordb=teacher_version_create_database.create_database(loader_path="temp.pdf")
             self.qa = teacher_version_QAchain.get_memory_qachain(vectordb=self.vectordb,llm=self.llm)
-            # self.qa = load_db("temp.pdf", "stuff", 4)
             button_load.button_style = "solid"
         self.clr_history()#更换了数据库，也要去除历史信息以免干扰
         return pn.pane.Markdown(f"Loaded File: {self.loaded_file}")#更新目前加载文件名
@@ -54,7 +51,7 @@ class simple_chat(param.Parameterized):
             pn.Row('User:', pn.pane.Markdown(query, width=600)),
             pn.Row('ChatBot:', pn.pane.Markdown(self.answer, width=600, style={'background-color': '#F6F6F6'}))
         ])#输出对话到GUI
-        inp.value = ''  # 清除时清除装载指示器
+        inp.value = ''  #清除装载指示器
         return pn.WidgetBox(*self.panels, scroll=True)
 
     # 获取最后发送到数据库的问题
@@ -73,7 +70,7 @@ class simple_chat(param.Parameterized):
     # 获取数据库返回的源文件
     @param.depends('db_response', )
     def get_sources(self):
-        if not self.db_response:#如果还没有回复，报错GUI
+        if not self.db_response:#如果还没有回复，置空
             return
         rlist = [pn.Row(pn.pane.Markdown(f"Result of DB lookup:", styles={'background-color': '#F6F6F6'}))]
         for doc in self.db_response:#把回复的对应源文件打印出来
@@ -95,20 +92,20 @@ class simple_chat(param.Parameterized):
 
 
 if __name__=='__main__':
-    # 初始化聊天机器人
+    #初始化聊天机器人
     cb = simple_chat()
-    # 定义界面的小部件
-    file_input = pn.widgets.FileInput(accept='.pdf')  # PDF 文件的文件输入小部件
-    button_load = pn.widgets.Button(name="Load DB", button_type='primary')  # 加载数据库的按钮
-    button_clearhistory = pn.widgets.Button(name="Clear History", button_type='warning')  # 清除聊天记录的按钮
-    button_clearhistory.on_click(cb.clr_history)  # 将清除历史记录功能绑定到按钮上
-    inp = pn.widgets.TextInput(placeholder='Enter text here…')  # 用于用户查询的文本输入小部件
+    #定义界面的小部件
+    file_input = pn.widgets.FileInput(accept='.pdf')  # PDF文件件输入小部件
+    button_load = pn.widgets.Button(name="Load DB", button_type='primary')  #加载数据库的按钮
+    button_clearhistory = pn.widgets.Button(name="Clear History", button_type='warning')  #清除聊天记录的按钮
+    button_clearhistory.on_click(cb.clr_history)  #将清除历史记录功能绑定到按钮上
+    inp = pn.widgets.TextInput(placeholder='Enter text here…')  #用于用户查询的文本输入小部件
 
     # 将加载数据库和对话的函数绑定到相应的部件上
     bound_button_load = pn.bind(cb.load_db, button_load.param.clicks)
     conversation = pn.bind(cb.convchain, inp)
 
-    jpg_pane = pn.pane.Image('docs/imgs/chatbot.png')
+    jpg_pane = pn.pane.Image('docs/imgs/chatbot.png')#装饰图片
 
     # 使用 Panel 定义界面布局
     tab1 = pn.Column(
@@ -132,9 +129,10 @@ if __name__=='__main__':
         pn.layout.Divider(),
         pn.Row(jpg_pane.clone(width=400))
     )
-    # 将所有选项卡合并为一个仪表盘
+    #将所有选项卡合并为一个菜单
     dashboard = pn.Column(
         pn.Row(pn.pane.Markdown('# ChatWithYourData_Bot')),
         pn.Tabs(('Conversation', tab1), ('Database', tab2), ('Chat History', tab3), ('Configure', tab4))
     )
+    #启动GUI
     dashboard.show()
