@@ -49,7 +49,7 @@ class simple_chat(param.Parameterized):#chat封装类
         self.answer = result['answer']#截取答案
         self.panels.extend([
             pn.Row('User:', pn.pane.Markdown(query, width=600)),
-            pn.Row('ChatBot:', pn.pane.Markdown(self.answer, width=600, style={'background-color': '#F6F6F6'}))
+            pn.Row('ChatBot:', pn.pane.Markdown(self.answer, width=600, styles={'background-color': '#F6F6F6'}))
         ])#输出对话到GUI
         inp.value = ''  #清除装载指示器
         return pn.WidgetBox(*self.panels, scroll=True)
