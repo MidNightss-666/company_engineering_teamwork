@@ -80,19 +80,15 @@ def get_memory_qachain(vectordb,llm,chain_type='stuff',k=4):
     # )#创建问答链
     # 初始化，vectordb为使用get_simple_qachain根据地址生成的数据库对象，llm为create_llmmodel生成
     # 的大模型对象，k为每次搜索取前k个结果
-    chat_memory = ConversationBufferMemory(
-        memory_key="chat_history",  # 与 prompt 的输入变量保持一致。
-        return_messages=True  # 将以消息列表的形式返回聊天记录，而不是单个字符串
-    )  # 创建mem
+    #创建检索器和问答链
     retriever = vectordb.as_retriever(search_type="similarity", search_kwargs={"k": k})
     qa_chain = ConversationalRetrievalChain.from_llm(
-        llm,
-        retriever=retriever,
-        memory=chat_memory,
+        llm=ChatOpenAI(model_name=llm_name, temperature=0),
         chain_type=chain_type,
+        retriever=retriever,
         return_source_documents=True,
-        return_generated_question=True
-    )  # 创建问答链
+        return_generated_question=True,
+    )
     return qa_chain
 
 class memory_qachain:#类类型的问答链

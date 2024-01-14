@@ -67,6 +67,7 @@ class cbfs(param.Parameterized):
         super(cbfs, self).__init__(**params)
         self.panels = []
         self.loaded_file = "docs/matplotlib/第一回：Matplotlib初相识.pdf"
+        # self.loaded_file = ["docs/matplotlib/第一回：Matplotlib初相识.pdf","docs/matplotlib/第二回：艺术画笔见乾坤.pdf","docs/matplotlib/第三回：布局格式定方圆.pdf"]
         self.qa = load_db(self.loaded_file, "stuff", 4)
 
     # 将文档加载到聊天机器人中

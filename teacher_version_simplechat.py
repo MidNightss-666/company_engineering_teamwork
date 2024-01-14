@@ -15,7 +15,7 @@ class simple_chat(param.Parameterized):
     #初始化函数
     def __init__(self, directory='docs/chroma/matplotlib',llmname="gpt-3.5-turbo",**params):
         super(simple_chat, self).__init__(**params)
-        self.panels = []
+        self.panels = []#可视化页面
         # 导入数据库
         self.vectordb = teacher_version_QAchain.import_database(directory=directory)
         # 创建LLM
@@ -26,22 +26,22 @@ class simple_chat(param.Parameterized):
         # self.qa = load_db(self.loaded_file, "stuff", 4)
 
     #函数：将文档加载到聊天机器人中，count为总启动次数
-    def call_load_db(self, count):
-        if count == 0 or file_input.value is None:  # 初始化或未指定文件，报错 :
+    def load_db(self, count):
+        if count == 0 or file_input.value is None:  # 初始化或未指定文件，报默认文件 :
             return pn.pane.Markdown(f"Loaded File: {self.loaded_file}")
         else:
-            file_input.save("temp.pdf")  # 下载文件
-            self.loaded_file = file_input.filename
-            button_load.button_style = "outline"
-            #更新数据库和问答链，这里待检验
-            self.vectordb=teacher_version_create_database.create_database("docs/chroma/"+self.loaded_file,"temp.pdf")
+            file_input.save("temp.pdf")  #下载上传文件
+            self.loaded_file = file_input.filename#更新加载文件名
+            button_load.button_style = "outline"#更新按钮
+            #更新数据库和问答链
+            self.vectordb=teacher_version_create_database.create_database(loader_path="temp.pdf")
             self.qa = teacher_version_QAchain.get_memory_qachain(vectordb=self.vectordb,llm=self.llm)
             # self.qa = load_db("temp.pdf", "stuff", 4)
             button_load.button_style = "solid"
         self.clr_history()#更换了数据库，也要去除历史信息以免干扰
-        return pn.pane.Markdown(f"Loaded File: {self.loaded_file}")
+        return pn.pane.Markdown(f"Loaded File: {self.loaded_file}")#更新目前加载文件名
 
-    # 处理对话链，输入对话问答query，输出结果
+    #函数：处理对话链，输入问题query，输出结果
     def convchain(self, query):
         if not query:#GUI提示待输入
             return pn.WidgetBox(pn.Row('User:', pn.pane.Markdown("", width=600)), scroll=True)
@@ -60,7 +60,7 @@ class simple_chat(param.Parameterized):
     # 获取最后发送到数据库的问题
     @param.depends('db_query ', )
     def get_lquest(self):
-        if not self.db_query:#如果还没有提问，给出报错
+        if not self.db_query:#如果还没有提问，给出最后一个问题
             return pn.Column(
                 pn.Row(pn.pane.Markdown(f"Last question to DB:", styles={'background-color': '#F6F6F6'})),
                 pn.Row(pn.pane.Str("no DB accesses so far"))
@@ -105,10 +105,10 @@ if __name__=='__main__':
     inp = pn.widgets.TextInput(placeholder='Enter text here…')  # 用于用户查询的文本输入小部件
 
     # 将加载数据库和对话的函数绑定到相应的部件上
-    bound_button_load = pn.bind(cb.call_load_db, button_load.param.clicks)
+    bound_button_load = pn.bind(cb.load_db, button_load.param.clicks)
     conversation = pn.bind(cb.convchain, inp)
 
-    jpg_pane = pn.pane.Image('./img/convchain.jpg')
+    jpg_pane = pn.pane.Image('docs/imgs/chatbot.png')
 
     # 使用 Panel 定义界面布局
     tab1 = pn.Column(

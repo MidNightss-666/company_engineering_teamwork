@@ -6,6 +6,8 @@ langchain
 langchain-community
 chromadb
 chardet
+panel
+param
 tiktoken
 pip install -U langchain-openai
 #下面的一定在anaconda下，关闭梯子，配置清华源
