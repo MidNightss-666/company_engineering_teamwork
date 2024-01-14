@@ -1,6 +1,7 @@
 # 企业工程实践大作业——chatGPT3.5的外围工程
 运行环境：anaconda+pycharm（社区版和专业版应该都可以）
 ## 1. python环境部署：
+python版本：3.9.18亲测可以跑通，其他不保证
 1. 可以使用pip install -r requirePackage.txt安装所需依赖包
 2. 如果批量下载出错，可以逐一下载以下包：
    openai
