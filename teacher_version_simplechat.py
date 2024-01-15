@@ -2,7 +2,7 @@ import panel as pn
 import teacher_version_QAchain
 import param
 import teacher_version_create_database
-
+from panel.chat import ChatInterface
 
 class simple_chat(param.Parameterized):#chat封装类
     chat_history = param.List([])#历史记录
@@ -11,7 +11,7 @@ class simple_chat(param.Parameterized):#chat封装类
     db_response = param.List([])#回应集
     loaded_file="matplotlib"#默认载入的文件
     #初始化函数
-    def __init__(self, directory='docs/chroma/matplotlib',llmname="gpt-3.5-turbo",**params):
+    def __init__(self, directory='docs/chroma/python_learning',llmname="gpt-3.5-turbo",**params):
         super(simple_chat, self).__init__(**params)
         self.panels = []#可视化页面存储
         # 导入数据库
@@ -26,7 +26,7 @@ class simple_chat(param.Parameterized):#chat封装类
     #函数：将文档加载到聊天机器人中，count为总启动次数
     def load_db(self, count):
         if count == 0 or file_input.value is None:  # 初始化或未指定文件，报默认文件
-            return pn.pane.Markdown(f"Loaded File: {self.loaded_file}")
+            return pn.pane.Markdown(f"目前文件: {self.loaded_file}")
         else:
             file_input.save("temp.pdf")  #下载上传文件
             self.loaded_file = file_input.filename#更新加载文件名
@@ -36,23 +36,18 @@ class simple_chat(param.Parameterized):#chat封装类
             self.qa = teacher_version_QAchain.get_memory_qachain(vectordb=self.vectordb,llm=self.llm)
             button_load.button_style = "solid"
         self.clr_history()#更换了数据库，也要去除历史信息以免干扰
-        return pn.pane.Markdown(f"Loaded File: {self.loaded_file}")#更新目前加载文件名
+        return pn.pane.Markdown(f"目前文件: {self.loaded_file}")#更新目前加载文件名
 
     #函数：处理对话链，输入问题query，输出结果
-    def convchain(self, query):
-        if not query:#GUI提示待输入
-            return pn.WidgetBox(pn.Row('User:', pn.pane.Markdown("", width=600)), scroll=True)
-        result = self.qa({"question": query, "chat_history": self.chat_history})#给出答案
-        self.chat_history.extend([(query, result["answer"])])#结果载入历史记录
-        self.db_query = result["generated_question"]#更新问题集
-        self.db_response = result["source_documents"]#更新回复集
-        self.answer = result['answer']#截取答案
-        self.panels.extend([
-            pn.Row('User:', pn.pane.Markdown(query, width=600)),
-            pn.Row('ChatBot:', pn.pane.Markdown(self.answer, width=600, styles={'background-color': '#F6F6F6'}))
-        ])#输出对话到GUI
-        inp.value = ''  #清除装载指示器
-        return pn.WidgetBox(*self.panels, scroll=True)
+    def convchain(self, contents, user, instance):
+        if contents:
+            result = self.qa({"question": contents, "chat_history": self.chat_history})
+            self.chat_history.extend([(contents, result["answer"])])
+            self.db_query = result["generated_question"]
+            self.db_response = result["source_documents"]
+            self.answer = result['answer']
+            inp.value = ''  # 清除时清除装载指示器
+            return self.answer
 
     # 获取最后发送到数据库的问题
     @param.depends('db_query ', )
@@ -95,44 +90,44 @@ if __name__=='__main__':
     #初始化聊天机器人
     cb = simple_chat()
     #定义界面的小部件
-    file_input = pn.widgets.FileInput(accept='.pdf')  # PDF文件件输入小部件
-    button_load = pn.widgets.Button(name="Load DB", button_type='primary')  #加载数据库的按钮
-    button_clearhistory = pn.widgets.Button(name="Clear History", button_type='warning')  #清除聊天记录的按钮
+    file_input = pn.widgets.FileInput(accept='.pdf')  #PDF文件的文件输入小部件
+    button_load = pn.widgets.Button(name="加载数据库", button_type='primary')  #加载数据库的按钮
+    button_clearhistory = pn.widgets.Button(name="清除历史", button_type='warning')  #清除聊天记录的按钮
     button_clearhistory.on_click(cb.clr_history)  #将清除历史记录功能绑定到按钮上
-    inp = pn.widgets.TextInput(placeholder='Enter text here…')  #用于用户查询的文本输入小部件
+    inp = pn.widgets.TextInput(placeholder='请输入文本...')  #用于用户查询的文本输入小部件
 
     # 将加载数据库和对话的函数绑定到相应的部件上
     bound_button_load = pn.bind(cb.load_db, button_load.param.clicks)
     conversation = pn.bind(cb.convchain, inp)
 
-    jpg_pane = pn.pane.Image('docs/imgs/chatbot.png')#装饰图片
-
     # 使用 Panel 定义界面布局
-    tab1 = pn.Column(
-        pn.Row(inp),
-        pn.layout.Divider(),
-        pn.panel(conversation, loading_indicator=True, height=300),
-        pn.layout.Divider(),
-    )
-    tab2 = pn.Column(
+    tab2 = pn.Column(#显示搜索文本
         pn.panel(cb.get_lquest),
         pn.layout.Divider(),
         pn.panel(cb.get_sources),
     )
-    tab3 = pn.Column(
+    tab3 = pn.Column(#显示chat记录
         pn.panel(cb.get_chats),
         pn.layout.Divider(),
     )
-    tab4 = pn.Column(
+    tab4 = pn.Column(#载入PDF
         pn.Row(file_input, button_load, bound_button_load),
-        pn.Row(button_clearhistory, pn.pane.Markdown("Clears chat history. Can use to start a new topic")),
+        pn.Row(button_clearhistory, pn.pane.Markdown("清楚历史记录以开启一个新对话")),
         pn.layout.Divider(),
-        pn.Row(jpg_pane.clone(width=400))
     )
     #将所有选项卡合并为一个菜单
-    dashboard = pn.Column(
-        pn.Row(pn.pane.Markdown('# ChatWithYourData_Bot')),
-        pn.Tabs(('Conversation', tab1), ('Database', tab2), ('Chat History', tab3), ('Configure', tab4))
+    # 将所有选项卡合并为一个仪表盘
+    dashboard = pn.Row(pn.Column(
+        pn.Row(pn.pane.Markdown('# Hello,Chat!')),
+        pn.Tabs(('数据库', tab2), ('聊天记录', tab3), ('配置', tab4)),
+        width=1000,
+        styles=dict(background='#696969'),
+        sizing_mode='stretch_height'),
+        ChatInterface(
+            user='User',
+            callback=cb.convchain
+        )
     )
+
     #启动GUI
     dashboard.show()
