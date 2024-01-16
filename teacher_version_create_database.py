@@ -18,8 +18,8 @@ def create_database(loader_path, save_db=False, database_directory=""):
         docs.extend(loader.load())
     # 2. 分割文本
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size = 1000,  #每个文本块的大小
-        chunk_overlap = 150  #文本块之间的重叠部分。
+        chunk_size = 500,  #每个文本块的大小
+        chunk_overlap = 50  #文本块之间的重叠部分。
     )
     splits = text_splitter.split_documents(docs)#分割文本
 
@@ -52,17 +52,17 @@ if __name__ == '__main__':
     #         PyPDFLoader("docs/matplotlib/第二回：艺术画笔见乾坤.pdf"),
     #         PyPDFLoader("docs/matplotlib/第三回：布局格式定方圆.pdf")
     #     ]#PDF地址列表
-    loader_path = [
-        "docs/matplotlib/第一回：Matplotlib初相识.pdf",
-        "docs/matplotlib/第二回：艺术画笔见乾坤.pdf",
-        "docs/matplotlib/第三回：布局格式定方圆.pdf"
-    ]  # PDF地址列表
+    # loader_path = [
+    #     "docs/matplotlib/第一回：Matplotlib初相识.pdf",
+    #     "docs/matplotlib/第二回：艺术画笔见乾坤.pdf",
+    #     "docs/matplotlib/第三回：布局格式定方圆.pdf"
+    # ]  # PDF地址列表
     # loader_path="temp.pdf"
     #项目配置
-    # database_directory = "docs/chroma/python_learning/"# 数据库路径
-    # loader_path = [
-    #     "docs/python_learning/《流畅的Python》高清官方中文版.pdf" # PDF地址列表
-    # ]
-    #
+    database_directory = "docs/chroma/test/"# 数据库路径
+    loader_path = [
+        "docs/python_learning/《流畅的Python》高清官方中文版.pdf" # PDF地址列表
+    ]
+
     create_database(loader_path=loader_path,save_db=True,database_directory='docs/chroma/matplotlib/')
 

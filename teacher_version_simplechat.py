@@ -9,9 +9,9 @@ class simple_chat(param.Parameterized):#chat封装类
     answer = param.String("")#答案
     db_query = param.String("")#问题集
     db_response = param.List([])#回应集
-    loaded_file="matplotlib"#默认载入的文件
+    loaded_file="python教程"#默认载入的文件
     #初始化函数
-    def __init__(self, directory='docs/chroma/python_learning',llmname="gpt-3.5-turbo",**params):
+    def __init__(self, directory='docs/chroma/python_learning_saved',llmname="gpt-3.5-turbo",**params):
         super(simple_chat, self).__init__(**params)
         self.panels = []#可视化页面存储
         # 导入数据库
