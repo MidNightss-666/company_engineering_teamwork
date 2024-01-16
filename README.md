@@ -52,7 +52,7 @@ panel包的GUI界面需要依赖服务器启动，这里使用X服务器。
 2. 为了打开GUI界面，运行时需要保持Xming服务器开启。（如果打不开GUI界面）
 
 # 2.项目概况
-docs文件夹:存放项目的数据库和基础文件。chroma文件夹存放数据库，imgs存放GUI素材，matplotlib存放matplotlib教程，python_learning存放python教程。后面两个文件夹存放的PDF用于生成数据库
+docs文件夹:存放项目的数据库和基础文件。chroma文件夹存放数据库，imgs存放GUI素材，其余文件夹存放的PDF用于生成数据库
 envs.txt:项目配置的信息，和本文档基本一致
 readme.md:说明文档
 requirements.txt：依赖环境清单

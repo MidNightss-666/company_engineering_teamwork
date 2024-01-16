@@ -59,10 +59,14 @@ if __name__ == '__main__':
     # ]  # PDF地址列表
     # loader_path="temp.pdf"
     #项目配置
-    database_directory = "docs/chroma/test/"# 数据库路径
+    # database_directory = "docs/chroma/test/"# 数据库路径
+    # loader_path = [
+    #     "docs/python_learning/《流畅的Python》高清官方中文版.pdf" # PDF地址列表
+    # ]
+    database_directory = "docs/chroma/outsider"  # 数据库路径
     loader_path = [
-        "docs/python_learning/《流畅的Python》高清官方中文版.pdf" # PDF地址列表
+        "docs/outsider/局外人.pdf" # PDF地址列表
     ]
 
-    create_database(loader_path=loader_path,save_db=True,database_directory='docs/chroma/matplotlib/')
+    create_database(loader_path=loader_path,save_db=True,database_directory=database_directory)
 

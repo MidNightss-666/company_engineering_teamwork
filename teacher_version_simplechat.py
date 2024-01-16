@@ -9,9 +9,10 @@ class simple_chat(param.Parameterized):#chat封装类
     answer = param.String("")#答案
     db_query = param.String("")#问题集
     db_response = param.List([])#回应集
-    loaded_file="python教程"#默认载入的文件
+    loaded_file="matplotlib"#默认载入的文件
+    dir='docs/chroma/matplotlib'#默认数据库地址
     #初始化函数
-    def __init__(self, directory='docs/chroma/python_learning_saved',llmname="gpt-3.5-turbo",**params):
+    def __init__(self, directory=dir,llmname="gpt-3.5-turbo",**params):
         super(simple_chat, self).__init__(**params)
         self.panels = []#可视化页面存储
         # 导入数据库
@@ -112,7 +113,7 @@ if __name__=='__main__':
     )
     tab4 = pn.Column(#载入PDF
         pn.Row(file_input, button_load, bound_button_load),
-        pn.Row(button_clearhistory, pn.pane.Markdown("清楚历史记录以开启一个新对话")),
+        pn.Row(button_clearhistory, pn.pane.Markdown("清除历史记录以开启一个新对话")),
         pn.layout.Divider(),
     )
     #将所有选项卡合并为一个菜单
