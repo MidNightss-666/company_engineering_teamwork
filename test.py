@@ -1,7 +1,7 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains import ConversationalRetrievalChain
 from langchain_openai import OpenAIEmbeddings
-from langchain_community.document_loaders import PyPDFLoader
+from langchain.document_loaders import PyPDFLoader
 from langchain_openai import ChatOpenAI
 from langchain_community.vectorstores import DocArrayInMemorySearch
 import panel as pn
@@ -133,49 +133,50 @@ class cbfs(param.Parameterized):
         self.chat_history = []
         return
 
-# 初始化聊天机器人
-cb = cbfs()
+if __name__ == '__main__':
+    # 初始化聊天机器人
+    cb = cbfs()
 
-# 定义界面的小部件
-file_input = pn.widgets.FileInput(accept='.pdf') # PDF 文件的文件输入小部件
-button_load = pn.widgets.Button(name="Load DB", button_type='primary') # 加载数据库的按钮
-button_clearhistory = pn.widgets.Button(name="Clear History", button_type='warning') # 清除聊天记录的按钮
-button_clearhistory.on_click(cb.clr_history) # 将清除历史记录功能绑定到按钮上
-inp = pn.widgets.TextInput( placeholder='Enter text here…') # 用于用户查询的文本输入小部件
+    # 定义界面的小部件
+    file_input = pn.widgets.FileInput(accept='.pdf') # PDF 文件的文件输入小部件
+    button_load = pn.widgets.Button(name="Load DB", button_type='primary') # 加载数据库的按钮
+    button_clearhistory = pn.widgets.Button(name="Clear History", button_type='warning') # 清除聊天记录的按钮
+    button_clearhistory.on_click(cb.clr_history) # 将清除历史记录功能绑定到按钮上
+    inp = pn.widgets.TextInput( placeholder='Enter text here…') # 用于用户查询的文本输入小部件
 
-# 将加载数据库和对话的函数绑定到相应的部件上
-bound_button_load = pn.bind(cb.call_load_db, button_load.param.clicks)
-conversation = pn.bind(cb.convchain, inp)
+    # 将加载数据库和对话的函数绑定到相应的部件上
+    bound_button_load = pn.bind(cb.call_load_db, button_load.param.clicks)
+    conversation = pn.bind(cb.convchain, inp)
 
-jpg_pane = pn.pane.Image( './img/convchain.jpg')
+    jpg_pane = pn.pane.Image( './img/convchain.jpg')
 
-# 使用 Panel 定义界面布局
-tab1 = pn.Column(
-    pn.Row(inp),
-    pn.layout.Divider(),
-    pn.panel(conversation,  loading_indicator=True, height=300),
-    pn.layout.Divider(),
-)
-tab2= pn.Column(
-    pn.panel(cb.get_lquest),
-    pn.layout.Divider(),
-    pn.panel(cb.get_sources ),
-)
-tab3= pn.Column(
-    pn.panel(cb.get_chats),
-    pn.layout.Divider(),
-)
-tab4=pn.Column(
-    pn.Row( file_input, button_load, bound_button_load),
-    pn.Row( button_clearhistory, pn.pane.Markdown("Clears chat history. Can use to start a new topic" )),
-    pn.layout.Divider(),
-    pn.Row(jpg_pane.clone(width=400))
-)
-# 将所有选项卡合并为一个仪表盘
-dashboard = pn.Column(
-    pn.Row(pn.pane.Markdown('# ChatWithYourData_Bot')),
-    pn.Tabs(('Conversation', tab1), ('Database', tab2), ('Chat History', tab3),('Configure', tab4))
-)
+    # 使用 Panel 定义界面布局
+    tab1 = pn.Column(
+        pn.Row(inp),
+        pn.layout.Divider(),
+        pn.panel(conversation,  loading_indicator=True, height=300),
+        pn.layout.Divider(),
+    )
+    tab2= pn.Column(
+        pn.panel(cb.get_lquest),
+        pn.layout.Divider(),
+        pn.panel(cb.get_sources ),
+    )
+    tab3= pn.Column(
+        pn.panel(cb.get_chats),
+        pn.layout.Divider(),
+    )
+    tab4=pn.Column(
+        pn.Row( file_input, button_load, bound_button_load),
+        pn.Row( button_clearhistory, pn.pane.Markdown("Clears chat history. Can use to start a new topic" )),
+        pn.layout.Divider(),
+        pn.Row(jpg_pane.clone(width=400))
+    )
+    # 将所有选项卡合并为一个仪表盘
+    dashboard = pn.Column(
+        pn.Row(pn.pane.Markdown('# ChatWithYourData_Bot')),
+        pn.Tabs(('Conversation', tab1), ('Database', tab2), ('Chat History', tab3),('Configure', tab4))
+    )
 
-#启动GUI界面
-dashboard.show()
+    #启动GUI界面
+    dashboard.show()

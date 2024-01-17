@@ -19,7 +19,7 @@ def create_llmmodel(llmname=llm_name):
 def import_database(directory = 'docs/chroma/matplotlib/'):
     embedding = OpenAIEmbeddings()
     vectordb = Chroma(persist_directory=directory, embedding_function=embedding)
-    print("数据库导入成功，数据库规模：",vectordb._collection.count())
+    #print("数据库导入成功，数据库规模：",vectordb._collection.count())
     return vectordb
 
 #2. 测试向量检索
@@ -42,7 +42,7 @@ def search_data(vectordb,question="这节课的主要话题是什么",k=3):
 def get_simple_qachain(vectordb,llm):
     qa_chain = RetrievalQA.from_chain_type(
         llm,
-        retriever=vectordb.as_retriever()
+        retriever=vectordb.as_retriever(search_kwargs={"k": 2})
     )#使用数据库和vectordb构建检索式问答链
     return qa_chain
 

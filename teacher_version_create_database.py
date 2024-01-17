@@ -1,4 +1,4 @@
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.vectorstores import Chroma
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.document_loaders import PyPDFLoader
@@ -17,9 +17,8 @@ def create_database(loader_path, save_db=False, database_directory=""):
         loader = PyPDFLoader(loader_path)
         docs.extend(loader.load())
     # 2. 分割文本
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size = 1000,  #每个文本块的大小
-        chunk_overlap = 150  #文本块之间的重叠部分。
+    text_splitter = CharacterTextSplitter(
+        chunk_size=200
     )
     splits = text_splitter.split_documents(docs)#分割文本
 
@@ -39,7 +38,7 @@ def create_database(loader_path, save_db=False, database_directory=""):
             persist_directory=database_directory
 
         )
-    print("创建成功，数据库规模：", db._collection.count())
+    #print("创建成功，数据库规模：", db._collection.count())
     return db
 
 if __name__ == '__main__':
