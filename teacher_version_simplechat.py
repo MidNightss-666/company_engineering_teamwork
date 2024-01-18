@@ -121,7 +121,7 @@ if __name__=='__main__':
     dashboard = pn.Row(pn.Column(
         pn.Row(pn.pane.Markdown('# Hello,Chat!')),
         pn.Tabs(('数据库', tab2), ('聊天记录', tab3), ('配置', tab4)),
-        width=1000,
+        width=800,
         styles=dict(background='#696969'),
         sizing_mode='stretch_height'),
         ChatInterface(

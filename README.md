@@ -7,19 +7,33 @@ python版本：3.9.18亲测可以跑通，其他不保证
 尽量在anaconda开虚拟环境安装，以防库之间依赖冲突。
 1. 可以使用pip install -r requirePackage.txt安装所需依赖包
 2. 如果批量下载出错，可以逐一下载以下包：
+   
    openai
+   
   tensorflow
+  
   pypdf
+  
   langchain
+  
   langchain-community
+  
   chromadb
+  
   chardet
+  
   panel
+  
   param
+  
   tiktoken
+  
   pip install -U langchain-openai
+  
   以下两个包尽量使用conda下载，可以减少C++环境依赖报错的概率。下载时如果使用清华源等国内镜像，需要关闭梯子
+  
   conda install -c conda-forge chromadb
+  
   conda install -c conda-forge "langchain[docarray]"
 
 注1：如果下载时报错缺少C++环境依赖如下：
@@ -52,15 +66,28 @@ panel包的GUI界面需要依赖服务器启动，这里使用X服务器。
 2. 为了打开GUI界面，运行时需要保持Xming服务器开启。（如果打不开GUI界面）
 
 # 2.项目概况
-docs文件夹:存放项目的数据库和基础文件。chroma文件夹存放数据库，imgs存放GUI素材，其余文件夹存放的PDF用于生成数据库
-envs.txt:项目配置的信息，和本文档基本一致
-readme.md:说明文档
-requirements.txt：依赖环境清单
-teacher_version_create_database.py:用于从指定文件创建数据库
-teacher_version_QAchain.py:用于生成和测试逻辑链，导入数据库和LLM，测试数据库检索。
-teacher_version_simplechat.py:项目主文件，运行此文件以启动服务，生成GUI界面
-temp.pdf:项目运行时下载的用户文件
-test.py:项目构建时使用的测试文件，会在最后提交时删除
+对话BOT运行：python run teacher_version_simplechat.py
 
+测试文件运行： python run evaluation.py
+
+## 2.1 项目文件一览
+
+docs文件夹:存放项目的数据库和基础文件。chroma文件夹存放数据库，imgs存放GUI素材，其余文件夹存放的PDF用于生成数据库
+
+envs.txt:项目配置的信息，和本文档基本一致
+
+readme.md:说明文档
+
+requirements.txt：依赖环境清单
+
+teacher_version_create_database.py:用于从指定文件创建数据库
+
+teacher_version_QAchain.py:用于生成和测试逻辑链，导入数据库和LLM，测试数据库检索。
+
+evaluation.py:GPT能力检测文件
+
+teacher_version_simplechat.py:项目主文件，运行此文件以启动服务，生成GUI界面
+
+test.py:构建GPT项目时实验效果的文件
 
 
