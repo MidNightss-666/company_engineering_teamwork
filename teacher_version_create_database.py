@@ -62,10 +62,10 @@ if __name__ == '__main__':
     # loader_path = [
     #     "docs/python_learning/《流畅的Python》高清官方中文版.pdf" # PDF地址列表
     # ]
-    database_directory = "docs/chroma/outsider"  # 数据库路径
+    database_directory = "docs/chroma/matplotib_test"  # 数据库路径
     loader_path = [
-        "docs/outsider/局外人.pdf" # PDF地址列表
+        "docs/matplotlib/第一回：Matplotlib初相识.pdf" # PDF地址列表
     ]
 
-    create_database(loader_path=loader_path,save_db=True,database_directory=database_directory)
+    create_database(loader_path=loader_path,save_db=False,database_directory=database_directory)
 

@@ -9,8 +9,8 @@ class simple_chat(param.Parameterized):#chat封装类
     answer = param.String("")#答案
     db_query = param.String("")#问题集
     db_response = param.List([])#回应集
-    loaded_file="matplotlib"#默认载入的文件
-    dir='docs/chroma/matplotlib'#默认数据库地址
+    loaded_file="python"#默认载入的文件
+    dir='docs/chroma/python_learning_saved'#默认数据库地址
     #初始化函数
     def __init__(self, directory=dir,llmname="gpt-3.5-turbo",**params):
         super(simple_chat, self).__init__(**params)
@@ -55,11 +55,11 @@ class simple_chat(param.Parameterized):#chat封装类
     def get_lquest(self):
         if not self.db_query:#如果还没有提问，给出最后一个问题
             return pn.Column(
-                pn.Row(pn.pane.Markdown(f"Last question to DB:", styles={'background-color': '#F6F6F6'})),
-                pn.Row(pn.pane.Str("no DB accesses so far"))
+                pn.Row(pn.pane.Markdown(f"最近问题:", styles={'background-color': '#F6F6F6'})),
+                pn.Row(pn.pane.Str("暂无检索结果"))
             )
         return pn.Column(#从问题集中找到最新的问题返回到GUI
-            pn.Row(pn.pane.Markdown(f"DB query:", styles={'background-color': '#F6F6F6'})),
+            pn.Row(pn.pane.Markdown(f"最近问题:", styles={'background-color': '#F6F6F6'})),
             pn.pane.Str(self.db_query)
         )
 
@@ -68,7 +68,7 @@ class simple_chat(param.Parameterized):#chat封装类
     def get_sources(self):
         if not self.db_response:#如果还没有回复，置空
             return
-        rlist = [pn.Row(pn.pane.Markdown(f"Result of DB lookup:", styles={'background-color': '#F6F6F6'}))]
+        rlist = [pn.Row(pn.pane.Markdown(f"数据库检索结果:", styles={'background-color': '#F6F6F6'}))]
         for doc in self.db_response:#把回复的对应源文件打印出来
             rlist.append(pn.Row(pn.pane.Str(doc)))
         return pn.WidgetBox(*rlist, width=600, scroll=True)
@@ -76,8 +76,8 @@ class simple_chat(param.Parameterized):#chat封装类
     @param.depends('convchain', 'clr_history')
     def get_chats(self):
         if not self.chat_history:#如果没有历史记录，报错GUI
-            return pn.WidgetBox(pn.Row(pn.pane.Str("No History Yet")), width=600, scroll=True)
-        rlist = [pn.Row(pn.pane.Markdown(f"Current Chat History variable", styles={'background-color': '#F6F6F6'}))]
+            return pn.WidgetBox(pn.Row(pn.pane.Str("目前没有历史记录")), width=600, scroll=True)
+        rlist = [pn.Row(pn.pane.Markdown(f"对话记录：", styles={'background-color': '#F6F6F6'}))]
         for exchange in self.chat_history:#打印聊天记录
             rlist.append(pn.Row(pn.pane.Str(exchange)))
         return pn.WidgetBox(*rlist, width=600, scroll=True)
