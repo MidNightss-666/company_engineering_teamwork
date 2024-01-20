@@ -61,16 +61,16 @@ class simple_chat(param.Parameterized):#chat封装类
                 pn.Row(pn.pane.Markdown(f"最近问题:", styles={'background-color': '#F6F6F6'})),
                 pn.Row(pn.pane.Str("暂无检索结果"))
             )
-        input_json = json.dumps({"text": self.answer})  #将 self.db_response 转换为 JSON 格式
-        response1 = openai.Moderation.create(input=input_json)  #使用转换后的 JSON 作为输入获得审查结果
-        self.moderation = response1["results"][0]  #从 response1 中提取出“results”列表的第一个元素
+        #input_json = json.dumps({"text": self.answer})  #将 self.db_response 转换为 JSON 格式
+        #response1 = openai.Moderation.create(input=input_json)  #使用转换后的 JSON 作为输入获得审查结果
+        #self.moderation = response1["results"][0]  #从 response1 中提取出“results”列表的第一个元素
         return pn.Column(#从问题集中找到最新的问题返回到GUI
             pn.Row(pn.pane.Markdown(f"最近问题:", styles={'background-color': '#F6F6F6'})),
             pn.pane.Str(self.db_query),
-            pn.Row(pn.pane.Markdown(f"回复:", styles={'background-color': '#F6F6F6'})),
-            pn.pane.Str(self.answer),
-            pn.Row(pn.pane.Markdown(f"审查结果:", styles={'background-color': '#F6F6F6'})),
-            pn.pane.Str(self.moderation)
+            #pn.Row(pn.pane.Markdown(f"回复:", styles={'background-color': '#F6F6F6'})),
+            #pn.pane.Str(self.answer),
+            # pn.Row(pn.pane.Markdown(f"审查结果:", styles={'background-color': '#F6F6F6'})),
+            #pn.pane.Str(self.moderation)
         )
 
     # 获取数据库返回的源文件
