@@ -1,6 +1,8 @@
 import panel as pn
 import teacher_version_QAchain
 import param
+import openai
+import json
 import teacher_version_create_database
 from panel.chat import ChatInterface
 
@@ -9,6 +11,7 @@ class simple_chat(param.Parameterized):#chat封装类
     answer = param.String("")#答案
     db_query = param.String("")#问题集
     db_response = param.List([])#回应集
+    moderation = param.String("")#审查结果
     loaded_file="python"#默认载入的文件
     dir='docs/chroma/python_learning_saved'#默认数据库地址
     #初始化函数
@@ -50,7 +53,7 @@ class simple_chat(param.Parameterized):#chat封装类
             inp.value = ''  # 清除时清除装载指示器
             return self.answer
 
-    # 获取最后发送到数据库的问题
+    # 获取最后发送到数据库的问题，答案和对答案的合法性评估
     @param.depends('db_query ', )
     def get_lquest(self):
         if not self.db_query:#如果还没有提问，给出最后一个问题
@@ -58,9 +61,16 @@ class simple_chat(param.Parameterized):#chat封装类
                 pn.Row(pn.pane.Markdown(f"最近问题:", styles={'background-color': '#F6F6F6'})),
                 pn.Row(pn.pane.Str("暂无检索结果"))
             )
+        input_json = json.dumps({"text": self.answer})  #将 self.db_response 转换为 JSON 格式
+        response1 = openai.Moderation.create(input=input_json)  #使用转换后的 JSON 作为输入获得审查结果
+        self.moderation = response1["results"][0]  #从 response1 中提取出“results”列表的第一个元素
         return pn.Column(#从问题集中找到最新的问题返回到GUI
             pn.Row(pn.pane.Markdown(f"最近问题:", styles={'background-color': '#F6F6F6'})),
-            pn.pane.Str(self.db_query)
+            pn.pane.Str(self.db_query),
+            pn.Row(pn.pane.Markdown(f"回复:", styles={'background-color': '#F6F6F6'})),
+            pn.pane.Str(self.answer),
+            pn.Row(pn.pane.Markdown(f"审查结果:", styles={'background-color': '#F6F6F6'})),
+            pn.pane.Str(self.moderation)
         )
 
     # 获取数据库返回的源文件
